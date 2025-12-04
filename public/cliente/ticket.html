@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket - Gaming UTN</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+
+<header>
+    <h1>Ticket de Compra</h1>
+</header>
+
+<main>
+    <div id="ticket-container"></div>
+
+    <h2>Total: $<span id="total"></span></h2>
+
+    <button onclick="window.location.href='productos.html'">
+        Volver a comprar
+    </button>
+    <button onclick="window.print()">Descargar PDF</button>
+</main>
+
+<script src="./js/ticket.js"></script>
+</body>
+</html>

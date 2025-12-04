@@ -1,0 +1,21 @@
+<h2>Editar Producto</h2>
+
+<form action="/admin/products/edit/<%= product.id %>" method="POST" enctype="multipart/form-data">
+
+    <label>Nombre:</label>
+    <input type="text" name="name" value="<%= product.name %>" required>
+
+    <label>Categoría:</label>
+    <input type="text" name="category" value="<%= product.category %>" required>
+
+    <label>Precio:</label>
+    <input type="number" name="price" value="<%= product.price %>" required>
+
+    <label>Imagen actual:</label>
+    <img src="/uploads/<%= product.image %>" width="120">
+
+    <label>Nueva imagen (opcional):</label>
+    <input type="file" name="image" accept="image/*">
+
+    <button type="submit">Guardar cambios</button>
+</form>

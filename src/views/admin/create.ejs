@@ -1,0 +1,18 @@
+<h2>Crear Producto</h2>
+
+<form action="/admin/products/create" method="POST" enctype="multipart/form-data">
+
+    <label>Nombre:</label>
+    <input type="text" name="nombre" required>
+
+    <label>Categoría:</label>
+    <input type="text" name="categoria" required>
+
+    <label>Precio:</label>
+    <input type="number" name="precio" required>
+
+    <label>Imagen:</label>
+    <input type="file" name="imagen" accept="image/*" required>
+
+    <button type="submit">Crear</button>
+</form>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+</head>
+
+<body>
+
+    <!-- header -->
+    <%- include("./partials/header") %>
+
+    <!-- CONTENIDO QUE CARGA CADA VISTA -->
+    <main>
+        <%- include(`./${view}`) %>
+    </main>
+
+    <!-- footer -->
+    <%- include("./partials/footer") %>
+
+</body>
+</html>
