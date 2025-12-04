@@ -1,43 +1,59 @@
-import connection from "../database/db.js";
+import db from "../database/db.js";
 
-// Seleccionar todos
-export const selectAllProducts = () => {
-    const sql = "SELECT * FROM products";
-    return connection.query(sql);
-};
+class ProductoModel {
 
-// Seleccionar por id
-const selectProductWhereId = (id) => {
-    let sql = "SELECT * FROM products WHERE id = ?";
-    return connection.query(sql, [id]);
-};
+    // TRAER TODOS LOS PRODUCTOS
+    static async obtenerTodos() {
+        const query = "SELECT * FROM products";
+        const [rows] = await db.query(query);
+        return rows;
+    }
 
-// Crear producto
-const insertProduct = (name, image, category, price) => {
-    let sql = "INSERT INTO products (name, image, category, price) VALUES (?, ?, ?, ?)";
-    return connection.query(sql, [name, image, category, price]);
-};
+    // TRAER UN PRODUCTO POR ID
+    static async obtenerPorId(id) {
+        const query = "SELECT * FROM products WHERE id = ?";
+        const [rows] = await db.query(query, [id]);
+        return rows[0];
+    }
 
-// Actualizar producto
-const updateProduct = (name, image, category, price, id) => {
-    let sql = `
-        UPDATE products
-        SET name = ?, image = ?, category = ?, price = ?
-        WHERE id = ?
-    `;
-    return connection.query(sql, [name, image, category, price, id]);
-};
+    // CREAR PRODUCTO
+    static async crear(nombre, imagen, categoria, precio) {
+        const query = `
+            INSERT INTO products (nombre, imagen, categoria, precio, activo, creado_en, actualizado_en)
+            VALUES (?, ?, ?, ?, 1, NOW(), NOW())
+        `;
+        await db.query(query, [nombre, imagen, categoria, precio]);
+    }
 
-// Eliminar producto
-const deleteProduct = (id) => {
-    let sql = "DELETE FROM products WHERE id = ?";
-    return connection.query(sql, [id]);
-};
+    // EDITAR PRODUCTO
+    static async editar(nombre, imagen, categoria, precio, id) {
+        const query = `
+            UPDATE products
+            SET nombre = ?, imagen = ?, categoria = ?, precio = ?, actualizado_en = NOW()
+            WHERE id = ?
+        `;
+        await db.query(query, [nombre, imagen, categoria, precio, id]);
+    }
 
-export default {
-    selectAllProducts,
-    selectProductWhereId,
-    insertProduct,
-    updateProduct,
-    deleteProduct
-};
+    // DESACTIVAR (BAJA LÓGICA)
+    static async desactivar(id) {
+        const query = `
+            UPDATE products
+            SET activo = 0
+            WHERE id = ?
+        `;
+        await db.query(query, [id]);
+    }
+
+    // ACTIVAR
+    static async activar(id) {
+        const query = `
+            UPDATE products
+            SET activo = 1
+            WHERE id = ?
+        `;
+        await db.query(query, [id]);
+    }
+}
+
+export default ProductoModel;

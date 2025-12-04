@@ -1,21 +1,20 @@
 import { getProducts } from "./api.js";
 
-let currentPage = 1;
 let currentCategory = "ALL";
 let allProducts = [];
 
 const productsContainer = document.getElementById("products-container");
-const paginationContainer = document.getElementById("pagination");
 const categoryButtons = document.querySelectorAll(".category-btn");
 
 // ========= CARGAR PRODUCTOS ==========
-async function loadProducts(page = 1) {
-    const response = await getProducts(page);
-    allProducts = response.payload;
-    currentPage = response.pagination.page;
-
-    renderProducts(allProducts);
-    renderPagination(response.pagination);
+async function loadProducts() {
+    try {
+        const response = await getProducts(); // ahora devuelve SOLO un array
+        allProducts = response;               // guardamos el array de productos
+        renderProducts(allProducts);
+    } catch (error) {
+        console.log("Error al cargar productos:", error);
+    }
 }
 
 function renderProducts(list) {
@@ -40,19 +39,7 @@ function renderProducts(list) {
     });
 }
 
-function renderPagination({ page, totalPages }) {
-    paginationContainer.innerHTML = "";
-
-    for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.innerText = i;
-        btn.className = i === page ? "active" : "";
-        btn.onclick = () => loadProducts(i);
-        paginationContainer.appendChild(btn);
-    }
-}
-
-// ========= FILTRO POR CATEGORÍA ==========
+// ========= FILTRO POR CATEGORIA ==========
 categoryButtons.forEach(btn => {
     btn.addEventListener("click", () => {
         currentCategory = btn.dataset.category;

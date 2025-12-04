@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
     <title>Carrito - Gaming UTN</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/index.css">
+
 </head>
+
 <body>
+
 <header>
-    <h1>Carrito</h1>
-    <nav>
-        <a href="productos.html">← Seguir comprando</a>
-    </nav>
+    <h1>Mi Carrito</h1>
+    <a class="volver" href="productos.html">← Volver a productos</a>
 </header>
 
 <main>
-    <div id="cart-container"></div>
+    <div id="cart-container" class="cart-list"></div>
 
-    <h2>Total: $<span id="total">0</span></h2>
-
-    <button onclick="window.location.href='ticket.html'">
-        Finalizar compra
-    </button>
+    <div class="cart-summary">
+        <h2>Total: $<span id="total"></span></h2>
+        <button id="finalizar" class="btn-finalizar">Finalizar compra</button>
+    </div>
 </main>
 
-<script src="js/carrito.js"></script>
+<script type="module" src="./js/carrito.js"></script>
 </body>
 </html>

@@ -1,119 +1,131 @@
 import express from "express";
 import multer from "multer";
-import ProductModels from "../models/product.models.js";
+import ProductoModel from "../models/product.models.js";
 
 const router = express.Router();
 
-// ============================
-// MULTER (debe ir ANTES de las rutas)
-// ============================
-
+/* ======================================
+    Configuración de MULTER para imágenes
+====================================== */
 const storage = multer.diskStorage({
-    destination: "public/uploads/",
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + "-" + file.originalname);
-    }
+    destination: (req, file, cb) => cb(null, "public/images"),
+    filename: (req, file, cb) => cb(null, Date.now() + "_" + file.originalname)
 });
 
 const upload = multer({ storage });
 
-// ============================
-// LISTAR PRODUCTOS
-// ============================
-router.get("/products", async (req, res) => {
-    const products = await ProductModels.selectAllProducts();
-
-    res.render("admin/layout", {
-        title: "Administrar Productos",
-        view: "products",
-        products
-    });
-});
-
-
-// ============================
-// FORMULARIO CREAR PRODUCTO
-// ============================
-router.get("/products/create", (req, res) => {
-    res.render("admin/create", {
-        title: "Crear Producto"
-    });
-});
-
-// ============================
-// GUARDAR PRODUCTO (POST)
-// ============================
-router.post("/products/create", upload.single("image"), async (req, res) => {
+/* ======================================
+    DASHBOARD - LISTAR PRODUCTOS
+====================================== */
+router.get("/productos", async (req, res) => {
     try {
-        const { name, category, price } = req.body;
-        const image = req.file.filename;
+        const productos = await ProductoModel.obtenerTodos();
 
-        await ProductModels.insertProduct(name, image, category, price);
-
-        res.redirect("/admin/products");
-    } catch (error) {
-        console.error("Error al crear producto:", error);
-        res.status(500).send("Error al crear el producto");
-    }
-});
-
-// ============================
-// ELIMINAR PRODUCTO
-// ============================
-router.get("/products/delete/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-        await ProductModels.deleteProduct(id);
-
-        res.redirect("/admin/products");
-
-    } catch (error) {
-        console.error("Error al eliminar producto:", error);
-        res.status(500).send("Error al eliminar el producto");
-    }
-});
-
-
-router.get("/products/edit/:id", async (req, res) => {
-    try {
-        const { id } = req.params;
-
-        const [[product]] = await ProductModels.selectProductWhereId(id);
-
-        res.render("admin/edit", {
-            title: "Editar Producto",
-            product
+        res.render("admin/layout", {
+            title: "Listado de Productos",
+            view: "products",
+            productos
         });
 
     } catch (error) {
-        console.error("Error al cargar el producto:", error);
-        res.status(500).send("Error al cargar el producto");
+        console.log(error);
+        res.send("Error al obtener productos");
     }
 });
 
-router.post("/products/edit/:id", upload.single("image"), async (req, res) => {
+/* ======================================
+    CREAR PRODUCTO - VISTA
+====================================== */
+router.get("/productos/crear", (req, res) => {
+    res.render("admin/layout", {
+        title: "Crear Producto",
+        view: "create"
+    });
+});
+
+/* ======================================
+    CREAR PRODUCTO - PROCESAR FORMULARIO
+====================================== */
+router.post("/productos/crear", upload.single("imagen"), async (req, res) => {
     try {
-        const { id } = req.params;
-        const { name, category, price } = req.body;
+        const { nombre, categoria, precio } = req.body;
+        const imagen = req.file ? req.file.filename : null;
 
-        // Si se sube imagen nueva → usarla
-        let image = req.body.currentImage;
+        await ProductoModel.crear(nombre, imagen, categoria, precio);
 
-        if (req.file) {
-            image = req.file.filename;
-        }
-
-        await ProductModels.updateProduct(name, image, category, price, id);
-
-        res.redirect("/admin/products");
+        res.redirect("/admin/productos");
 
     } catch (error) {
-        console.error("Error al editar producto:", error);
-        res.status(500).send("Error al editar el producto");
+        console.log(error);
+        res.send("Error al crear producto");
     }
 });
 
+/* ======================================
+    EDITAR PRODUCTO - VISTA
+====================================== */
+router.get("/productos/editar/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        const producto = await ProductoModel.obtenerPorId(id);
 
+        res.render("admin/layout", {
+            title: "Editar Producto",
+            view: "edit",
+            producto
+        });
 
+    } catch (error) {
+        console.log(error);
+        res.send("Error al cargar producto");
+    }
+});
+
+/* ======================================
+    EDITAR PRODUCTO - PROCESAR FORMULARIO
+====================================== */
+router.post("/productos/editar/:id", upload.single("imagen"), async (req, res) => {
+    try {
+        const id = req.params.id;
+        const { nombre, categoria, precio, imagenActual } = req.body;
+
+        // Si el usuario subió nueva imagen, usarla. Si no, mantener la actual.
+        const imagen = req.file ? req.file.filename : imagenActual;
+
+        await ProductoModel.editar(nombre, imagen, categoria, precio, id);
+
+        res.redirect("/admin/productos");
+
+    } catch (error) {
+        console.log(error);
+        res.send("Error al editar producto");
+    }
+});
+
+/* ======================================
+    BAJA LÓGICA DEL PRODUCTO (DESACTIVAR)
+====================================== */
+router.post("/productos/desactivar/:id", async (req, res) => {
+    try {
+        await ProductoModel.desactivar(req.params.id);
+        res.redirect("/admin/productos");
+    } catch (error) {
+        console.log(error);
+        res.send("Error al desactivar producto");
+    }
+});
+
+/* ======================================
+    ACTIVAR PRODUCTO
+====================================== */
+router.post("/productos/activar/:id", async (req, res) => {
+    try {
+        await ProductoModel.activar(req.params.id);
+        res.redirect("/admin/productos");
+    } catch (error) {
+        console.log(error);
+        res.send("Error al activar producto");
+    }
+});
 
 export default router;

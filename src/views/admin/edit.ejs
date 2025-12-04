@@ -1,21 +1,75 @@
-<h2>Editar Producto</h2>
+<section class="admin-form-container">
+    <h2>Editar producto</h2>
 
-<form action="/admin/products/edit/<%= product.id %>" method="POST" enctype="multipart/form-data">
+    <form action="/admin/productos/editar/<%= producto.id %>" 
+        method="POST" 
+        enctype="multipart/form-data"
+        class="admin-form">
 
-    <label>Nombre:</label>
-    <input type="text" name="name" value="<%= product.name %>" required>
+        <!-- Nombre -->
+        <div class="form-group">
+            <label for="nombre">Nombre del producto:</label>
+            <input 
+                type="text" 
+                id="nombre" 
+                name="nombre" 
+                value="<%= producto.nombre %>" 
+                required
+            >
+        </div>
 
-    <label>Categoría:</label>
-    <input type="text" name="category" value="<%= product.category %>" required>
+        <!-- Categoría -->
+        <div class="form-group">
+            <label for="categoria">Categoría:</label>
+            
+            <select id="categoria" name="categoria" required>
+                <option value="TECLADO" <%= producto.categoria === "TECLADO" ? "selected" : "" %>>TECLADO</option>
+                <option value="AURICULAR" <%= producto.categoria === "AURICULAR" ? "selected" : "" %>>AURICULAR</option>
+            </select>
+        </div>
 
-    <label>Precio:</label>
-    <input type="number" name="price" value="<%= product.price %>" required>
+        <!-- Precio -->
+        <div class="form-group">
+            <label for="precio">Precio:</label>
+            <input 
+                type="number" 
+                id="precio" 
+                name="precio" 
+                step="0.01" 
+                value="<%= producto.precio %>" 
+                required
+            >
+        </div>
 
-    <label>Imagen actual:</label>
-    <img src="/uploads/<%= product.image %>" width="120">
+        <!-- Imagen actual -->
+        <div class="form-group">
+            <label>Imagen actual:</label>
 
-    <label>Nueva imagen (opcional):</label>
-    <input type="file" name="image" accept="image/*">
+            <% if (producto.imagen) { %>
+                <img 
+                    src="/images/<%= producto.imagen %>" 
+                    alt="Imagen del producto"
+                    class="preview-img"
+                    style="width:150px; border-radius:8px; margin-bottom:10px;"
+                >
+            <% } else { %>
+                <p>No hay imagen cargada.</p>
+            <% } %>
 
-    <button type="submit">Guardar cambios</button>
-</form>
+            <!-- Input oculto para mantener la imagen si no suben una nueva -->
+            <input 
+                type="hidden" 
+                name="imagenActual" 
+                value="<%= producto.imagen %>"
+            >
+        </div>
+
+        <!-- Subir nueva imagen -->
+        <div class="form-group">
+            <label for="imagen">Nueva imagen (opcional):</label>
+            <input type="file" id="imagen" name="imagen" accept="image/*">
+        </div>
+
+        <button type="submit" class="btn-guardar">Guardar cambios</button>
+    </form>
+</section>

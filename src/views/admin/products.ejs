@@ -1,31 +1,63 @@
-<h2>Productos</h2>
+<section class="tabla-productos">
 
-<a href="/admin/products/create" class="btn">Crear Producto</a>
+    <h2>Listado de Productos</h2>
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Categoría</th>
-        <th>Precio</th>
-        <th>Imagen</th>
-        <th>Activo</th>
-        <th>Acciones</th>
-    </tr>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Imagen</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
 
-    <% products.forEach(p => { %>
-        <tr>
-            <td><%= p.id %></td>
-            <td><%= p.name %></td>
-            <td><%= p.category %></td>
-            <td>$<%= p.price %></td>
-            <td><img src="/uploads/<%= p.image %>" width="80"></td>
-            <td><%= p.active ? "Sí" : "No" %></td>
+        <tbody>
+            <% productos.forEach(p => { %>
+                <tr>
+                    <td><%= p.id %></td>
+                    <td><%= p.nombre %></td>
+                    <td><%= p.categoria %></td>
+                    <td>$<%= p.precio %></td>
 
-            <td>
-                <a href="/admin/products/edit/<%= p.id %>">Editar</a> |
-                <a href="/admin/products/delete/<%= p.id %>" style="color:red;">Eliminar</a>
-            </td>
-        </tr>
-    <% }) %>
-</table>
+                    <td>
+                        <% if (p.imagen) { %>
+                            <img src="/uploads/<%= p.imagen %>" 
+                            alt="img"
+                            style="width:70px; border-radius:6px;">
+                        <% } else { %>
+                            <i>Sin imagen</i>
+                        <% } %>
+                    </td>
+
+                    <td>
+                        <% if (p.activo === 1) { %>
+                            <span style="color:green;">Activo</span>
+                        <% } else { %>
+                            <span style="color:red;">Inactivo</span>
+                        <% } %>
+                    </td>
+
+                    <td>
+                        <a href="/admin/productos/editar/<%= p.id %>">Editar</a>
+
+                        <% if (p.activo === 1) { %>
+                            <form action="/admin/productos/desactivar/<%= p.id %>" method="POST" style="display:inline;">
+                                <button type="submit">Desactivar</button>
+                            </form>
+                        <% } else { %>
+                            <form action="/admin/productos/activar/<%= p.id %>" method="POST" style="display:inline;">
+                                <button type="submit">Activar</button>
+                            </form>
+                        <% } %>
+
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+</section>

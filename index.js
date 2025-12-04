@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // Archivos estáticos (frontend + imágenes)
 // ============================
 app.use(express.static("public"));
-
+app.use("/uploads", express.static("uploads"));
 // ============================
 // Motor de vistas (admin panel - EJS)
 // ============================

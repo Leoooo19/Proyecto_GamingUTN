@@ -1,11 +1,13 @@
-const API_URL = "http://localhost:3500/api";
+const API_URL = "http://localhost:3500/api/products";
 
-export async function getProducts(page = 1, limit = 8) {
-    const response = await fetch(`${API_URL}/products?page=${page}&limit=${limit}`);
-    return response.json();
+// Obtener todos los productos
+export async function getProducts() {
+    const response = await fetch(API_URL);
+    return response.json();  // devuelve un array simple
 }
 
+// Obtener producto por ID
 export async function getProductById(id) {
-    const response = await fetch(`${API_URL}/products/${id}`);
+    const response = await fetch(`${API_URL}/${id}`);
     return response.json();
 }

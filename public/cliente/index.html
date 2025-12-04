@@ -1,33 +1,50 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gaming UTN - Inicio</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+
+    <!-- Tipografía moderna -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 
-<header>
-    <h1>Gaming UTN</h1>
-</header>
+    <div class="contenedor-principal">
 
-<main class="home-container">
+        <h1 class="titulo">GAMING UTN</h1>
+        <h2 class="subtitulo">Bienvenido</h2>
 
-    <section class="welcome-box">
-        <h2>Bienvenidos a Gaming UTN</h2>
-        <p>Proyecto integrador desarrollado por Leonel Gadea</p>
-        <p>Explorá nuestros productos y arma tu setup gamer</p>
+        <div class="card">
 
-        <button onclick="window.location.href='productos.html'">
-            Ver Productos
-        </button>
-    </section>
+            <p class="card-title">Ingresá tu nombre para continuar</p>
 
-</main>
+            <input type="text" id="nombre" placeholder="Ej: Leo Gadea">
 
-<footer>
-    <p>© 2025 - Proyecto Integrador - UTN FRA</p>
-</footer>
+            <button id="btnEntrar">Ingresar a la tienda</button>
+
+        </div>
+
+    </div>
+
+    <script>
+        const input = document.getElementById("nombre");
+        const btn = document.getElementById("btnEntrar");
+
+        btn.addEventListener("click", () => {
+            const nombre = input.value.trim();
+
+            if (nombre.length < 2) {
+                alert("Ingresá un nombre válido");
+                return;
+            }
+
+            localStorage.setItem("clienteNombre", nombre);
+            window.location.href = "/cliente/productos.html";
+        });
+    </script>
 
 </body>
 </html>

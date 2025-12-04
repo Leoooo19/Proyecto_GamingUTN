@@ -2,24 +2,37 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ticket - Gaming UTN</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+    <title>Gaming UTN - Ticket</title>
+    <link rel="stylesheet" href="./css/index.css">
 </head>
 <body>
 
 <header>
-    <h1>Ticket de Compra</h1>
+    <h1>Gaming UTN - Ticket</h1>
 </header>
 
-<main>
-    <div id="ticket-container"></div>
+<main class="ticket-container">
 
-    <h2>Total: $<span id="total"></span></h2>
+    <div class="ticket" id="ticket-box">
 
-    <button onclick="window.location.href='productos.html'">
-        Volver a comprar
-    </button>
-    <button onclick="window.print()">Descargar PDF</button>
+        <h2>Compra realizada con éxito</h2>
+
+        <p class="ticket-info">
+            <strong>Cliente:</strong> <span id="ticket-client"></span><br>
+            <strong>Fecha:</strong> <span id="ticket-date"></span>
+        </p>
+
+        <div id="ticket-items"></div>
+
+        <div class="ticket-total">
+            <strong>Total final:</strong> $<span id="ticket-total"></span>
+        </div>
+
+        <button id="download-btn" class="btn-primary">Descargar Ticket</button>
+        <button id="volver-btn" class="btn-secondary">Volver al inicio</button>
+
+    </div>
+
 </main>
 
 <script src="./js/ticket.js"></script>

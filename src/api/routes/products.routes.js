@@ -1,12 +1,12 @@
-import { Router } from "express";
-import {
-    getActiveProductsPaginated,
-    getProductById,
-} from "../controllers/product.controller.js";
+import express from "express";
+import { obtenerProductos, obtenerProductoPorId } from "../controllers/product.controller.js";
 
-const router = Router();
+const router = express.Router();
 
-router.get("/", getActiveProductsPaginated);
-router.get("/:id", getProductById);
+// Obtener TODOS los productos (para el frontend)
+router.get("/", obtenerProductos);
+
+// Obtener un producto por ID
+router.get("/:id", obtenerProductoPorId);
 
 export default router;

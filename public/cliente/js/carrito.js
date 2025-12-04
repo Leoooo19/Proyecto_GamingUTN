@@ -1,61 +1,68 @@
 function loadCart() {
-    // MISMA CLAVE QUE EN productos.js
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
     const container = document.getElementById("cart-container");
     const totalElement = document.getElementById("total");
 
-    console.log("Carrito cargado:", cart); // para ver en consola que llega
-
     container.innerHTML = "";
+
     let total = 0;
 
-    cart.forEach((item, index) => {
-        total += Number(item.price) * Number(item.quantity);
+    cart.forEach(item => {
+        total += item.price * item.quantity;
 
-        container.innerHTML += `
-            <div class="cart-item">
-                <img src="/uploads/${item.image}" class="cart-img" />
-                <div class="cart-info">
-                    <h3>${item.name}</h3>
-                    <p>Precio: $${item.price}</p>
-                    <p>Categoría: ${item.category}</p>
+        const row = document.createElement("div");
+        row.className = "cart-item";
 
-                    <div class="qty">
-                        <button onclick="changeQty(${index}, -1)">-</button>
-                        <span>${item.quantity}</span>
-                        <button onclick="changeQty(${index}, 1)">+</button>
-                    </div>
+        row.innerHTML = `
+            <img src="/uploads/${item.image}" class="cart-img">
+            <div class="cart-info">
+                <h3>${item.name}</h3>
+                <p>Precio: $${item.price}</p>
 
-                    <button class="remove-btn" onclick="removeItem(${index})">
-                        Eliminar
-                    </button>
+                <div class="qty">
+                    <button class="qty-btn" onclick="changeQty(${item.id}, -1)">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="qty-btn" onclick="changeQty(${item.id}, 1)">+</button>
                 </div>
+
+                <button class="remove-btn" onclick="removeItem(${item.id})">Eliminar</button>
             </div>
         `;
+
+        container.appendChild(row);
     });
 
-    totalElement.innerText = total.toFixed(2);
+    totalElement.textContent = total;
 }
 
-function changeQty(index, amount) {
+window.changeQty = (id, amount) => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const item = cart.find(p => p.id === id);
 
-    cart[index].quantity += amount;
+    if (!item) return;
 
-    if (cart[index].quantity <= 0) {
-        cart.splice(index, 1);
+    item.quantity += amount;
+    if (item.quantity <= 0) {
+        cart = cart.filter(p => p.id !== id);
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
     loadCart();
-}
+};
 
-function removeItem(index) {
+window.removeItem = (id) => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.splice(index, 1);
-
+    cart = cart.filter(p => p.id !== id);
     localStorage.setItem("cart", JSON.stringify(cart));
     loadCart();
-}
+};
 
-window.onload = loadCart;
+document.getElementById("finalizar").addEventListener("click", () => {
+    if (confirm("¿Confirmar compra?")) {
+        localStorage.removeItem("cart");
+        window.location.href = "ticket.html";
+    }
+});
+
+loadCart();
